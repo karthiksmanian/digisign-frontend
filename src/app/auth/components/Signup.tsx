@@ -19,7 +19,6 @@ export default function Signup({ isLogin }: { isLogin: any }) {
     const handleSignUp = async () => {
         try {
             const data = await signInWithPopup(auth, provider);
-            console.log("data", data);
             setCurrentUser(data.user);
             localStorage.setItem("user", JSON.stringify(data.user));
             router.push('/dashboard');
@@ -34,9 +33,7 @@ export default function Signup({ isLogin }: { isLogin: any }) {
         try {
             if (password == repassword) {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-                console.log("userCredential", userCredential)
                 const user = userCredential.user
-                localStorage.setItem('token', JSON.stringify(user))
                 localStorage.setItem('user', JSON.stringify(user))
                 router.push('/dashboard')
             } else {

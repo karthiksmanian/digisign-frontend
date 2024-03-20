@@ -5,8 +5,9 @@ import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import 'react-toastify/dist/ReactToastify.css';
-import toastStyles from './auth.module.css'
+import toastStyles from './auth.module.css';
 
 export default function Login({ isLogin }: { isLogin: Function }) {
     const [currentUser, setCurrentUser] = useState<any>('');
@@ -31,9 +32,7 @@ export default function Login({ isLogin }: { isLogin: Function }) {
         event.preventDefault()
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password)
-            console.log("userCredential", userCredential)
             const user = userCredential.user
-            localStorage.setItem('token', JSON.stringify(user))
             localStorage.setItem('user', JSON.stringify(user))
             router.push('/dashboard')
         } catch (error: any) {
@@ -41,6 +40,17 @@ export default function Login({ isLogin }: { isLogin: Function }) {
             toast.error('' + error.message)
         }
     }
+
+    const handleForgotPassword = async (email: string) => {
+        try {
+            await sendPasswordResetEmail(auth, email);
+            setShowToast(true);
+            toast.success("Password reset email sent")
+        } catch (error: any) {
+            setShowToast(true);
+            toast.error('' + error.message)
+        }
+    };
 
     useEffect(() => {
         setShowToast(true);
@@ -97,13 +107,9 @@ export default function Login({ isLogin }: { isLogin: Function }) {
                                     <input required onChange={(e) => setPassword(e.target.value)} type="password" name="password" placeholder='password' className='bg-gray-100 outline-none text-gray-800 text-sm flex-1'></input>
                                 </div>
                             </div>
-                            <div className="flex flex-col items-center my-3">
-                                <div className='flex justify-between w-64'>
-                                    <label className='flex item-center text-black text-xs'>
-                                        <input type='checkbox' name='remember' className='mr-1'></input>
-                                        Remember me
-                                    </label>
-                                    <a href='#' className='text-xs text-blue-900 font-bold'>Forgot password?</a>
+                            <div className="my-3 flex justify-center">
+                                <div className="w-64 flex justify-end">
+                                    <a onClick={(e) => handleForgotPassword(email)} className='text-xs text-blue-900 font-bold cursor-pointer'>Forgot password?</a>
                                 </div>
                             </div>
                             <button className='border-2 border-gray-700 text-gray-900 rounded-full px-12 py-2 inline-block font-semibold transition-all duration-300 ease-in-out hover:bg-gray-800 hover:text-white hover:transition-delay-300'>Sign in</button>
@@ -114,7 +120,7 @@ export default function Login({ isLogin }: { isLogin: Function }) {
                     <h2 className='text-3xl font-bold mb-2'>Hello!</h2>
                     <div className='border-2 w-10 border-white inline-block mb-2'></div>
                     <p className='mb-10'>Doesn't have your account? Create one now!</p>
-                    <a onClick={() => { isLogin(false) }} className='border-2 border-white rounded-full px-12 py-2 inline-block font-semibold transition-all duration-300 ease-in-out hover:bg-gray-300 hover:text-gray-900 hover:transition-delay-300 cursor-pointer'>Sign up</a>
+                    <a onClick={() => {isLogin(false)}} className='border-2 border-white rounded-full px-12 py-2 inline-block font-semibold transition-all duration-300 ease-in-out hover:bg-gray-300 hover:text-gray-900 hover:transition-delay-300 cursor-pointer'>Sign up</a>
                 </div>
             </div>
         </main>
