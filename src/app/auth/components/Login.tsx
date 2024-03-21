@@ -4,16 +4,14 @@ import { auth, provider } from '../../../context/firebase-config'
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import 'react-toastify/dist/ReactToastify.css';
-import toastStyles from './auth.module.css';
 
 export default function Login({ isLogin }: { isLogin: Function }) {
     const [currentUser, setCurrentUser] = useState<any>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [showToast, setShowToast] = useState(false);
     const router = useRouter()
 
     const handleSignIn = async () => {
@@ -23,7 +21,6 @@ export default function Login({ isLogin }: { isLogin: Function }) {
             localStorage.setItem("user", JSON.stringify(data.user));
             router.push('/dashboard');
         } catch (error: any) {
-            setShowToast(true);
             toast.error('' + error.message)
         }
     };
@@ -36,7 +33,6 @@ export default function Login({ isLogin }: { isLogin: Function }) {
             localStorage.setItem('user', JSON.stringify(user))
             router.push('/dashboard')
         } catch (error: any) {
-            setShowToast(true);
             toast.error('' + error.message)
         }
     }
@@ -44,43 +40,19 @@ export default function Login({ isLogin }: { isLogin: Function }) {
     const handleForgotPassword = async (email: string) => {
         try {
             await sendPasswordResetEmail(auth, email);
-            setShowToast(true);
             toast.success("Password reset email sent")
         } catch (error: any) {
-            setShowToast(true);
             toast.error('' + error.message)
         }
     };
 
     useEffect(() => {
-        setShowToast(true);
-        const timeout = setTimeout(() => {
-            setShowToast(false);
-        }, 3000);
-        return () => clearTimeout(timeout);
-    }, []);
-
-    useEffect(() => {
         setCurrentUser(localStorage.getItem('user'))
         currentUser && router.push('/dashboard')
-    }, [])
+    }, [currentUser])
 
     return (
         <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-            {showToast && (
-                <ToastContainer
-                    toastClassName={toastStyles["toast-class"]}
-                    closeButton={false}
-                    position="top-right"
-                    autoClose={3000}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                />
-            )}
             <div className='bg-gray-700 rounded-2xl shadow-2xl flex w-2/3 max-w-4xl'>
                 <div className='w-3/5 p-5 bg-gray-200 rounded-tl-2xl rounded-bl-2xl'>
                     <div className='text-left text-gray-900 font-bold'><span className='text-gray-500'>Digi</span>Sign</div>
@@ -120,7 +92,7 @@ export default function Login({ isLogin }: { isLogin: Function }) {
                     <h2 className='text-3xl font-bold mb-2'>Hello!</h2>
                     <div className='border-2 w-10 border-white inline-block mb-2'></div>
                     <p className='mb-10'>Doesn't have your account? Create one now!</p>
-                    <a onClick={() => {isLogin(false)}} className='border-2 border-white rounded-full px-12 py-2 inline-block font-semibold transition-all duration-300 ease-in-out hover:bg-gray-300 hover:text-gray-900 hover:transition-delay-300 cursor-pointer'>Sign up</a>
+                    <a onClick={() => { isLogin(false) }} className='border-2 border-white rounded-full px-12 py-2 inline-block font-semibold transition-all duration-300 ease-in-out hover:bg-gray-300 hover:text-gray-900 hover:transition-delay-300 cursor-pointer'>Sign up</a>
                 </div>
             </div>
         </main>
