@@ -4,16 +4,14 @@ import { auth, provider } from '../../../context/firebase-config'
 import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import toastStyles from './auth.module.css'
 
 export default function Signup({ isLogin }: { isLogin: any }) {
     const [currentUser, setCurrentUser] = useState<any>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [repassword, setRepassword] = useState<string>('');
-    const [showToast, setShowToast] = useState(false);
     const router = useRouter();
 
     const handleSignUp = async () => {
@@ -23,7 +21,6 @@ export default function Signup({ isLogin }: { isLogin: any }) {
             localStorage.setItem("user", JSON.stringify(data.user));
             router.push('/dashboard');
         } catch (error: any) {
-            setShowToast(true);
             toast.error('' + error.message);
         }
     };
@@ -40,40 +37,17 @@ export default function Signup({ isLogin }: { isLogin: any }) {
                 throw new Error("Passwords do not match")
             }
         } catch (error) {
-            setShowToast(true);
             toast.error('' + error);
         }
     }
 
     useEffect(() => {
-        setShowToast(true);
-        const timeout = setTimeout(() => {
-            setShowToast(false);
-        }, 3000);
-        return () => clearTimeout(timeout);
-    }, []);
-
-    useEffect(() => {
         setCurrentUser(localStorage.getItem('user'))
         currentUser && router.push('/dashboard')
-    }, [])
+    }, [currentUser])
 
     return (
         <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-            {showToast && (
-                <ToastContainer
-                    toastClassName={toastStyles["toast-class"]}
-                    closeButton={false}
-                    position="top-right"
-                    autoClose={3000}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                />
-            )}
             <div className='bg-gray-700 rounded-2xl shadow-2xl flex w-2/3 max-w-4xl'>
                 <div className='w-2/5 bg-gray-900 text-white rounded-l-2xl py-36 px-12'>
                     <h2 className='text-3xl font-bold mb-2'>Hello!</h2>
