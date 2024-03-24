@@ -1,11 +1,10 @@
-import { FaFacebookF, FaGoogle, FaLinkedin, FaRegEnvelope } from 'react-icons/fa';
+import { FaRegEnvelope } from 'react-icons/fa';
 import { MdLockOutline } from 'react-icons/md';
 import { auth, provider } from '../../../context/firebase-config'
 import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 export default function Signup({ isLogin }: { isLogin: any }) {
     const [currentUser, setCurrentUser] = useState<any>('');
