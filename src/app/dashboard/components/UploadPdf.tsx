@@ -44,7 +44,7 @@ const UploadPdf: React.FC<Props> = ({ setShowPopup }) => {
 
       if (response.ok) {
         setShowPopup(false)
-        toast.success('File uploaded successfully');
+          toast.success('File uploaded successfully');
       } else {
         toast.error('File upload failed');
       }
