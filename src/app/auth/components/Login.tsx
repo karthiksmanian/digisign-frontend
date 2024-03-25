@@ -6,7 +6,6 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import 'react-toastify/dist/ReactToastify.css';
 
 export default function Login({ isLogin }: { isLogin: Function }) {
     const [currentUser, setCurrentUser] = useState<any>('');

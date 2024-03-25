@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import { useState } from 'react';
-
+import 'react-toastify/dist/ReactToastify.css';
 export default function Page() {
     const [isLoginPage, setIsLoginPage] = useState(true);
 
@@ -12,7 +12,7 @@ export default function Page() {
             <ToastContainer
                 theme='dark'
                 closeButton={false}
-                position="top-right"
+                position="bottom-center"
                 autoClose={3000}
                 newestOnTop={false}
                 closeOnClick
