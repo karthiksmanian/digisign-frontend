@@ -7,14 +7,11 @@ import Image from 'next/image';
 interface Props {
   popUp: boolean;
   setPopUp: (show: boolean) => void;
+  email: string;
 }
 
-const NavBar: React.FC<Props> = ({ popUp, setPopUp }) => {
+const NavBar: React.FC<Props> = ({ popUp, setPopUp, email }) => {
   const router = useRouter();
-  // const userJSON = localStorage.getItem('user');
-  // const user = userJSON ? JSON.parse(userJSON) : null;
-  // const email: string | undefined = user ? user['email'] : undefined;
-  const email = 'abishek@gmail.com';
 
   const handleLogOut = async () => {
     await signOut(auth)

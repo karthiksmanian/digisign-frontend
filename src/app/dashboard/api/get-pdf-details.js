@@ -7,7 +7,7 @@ export const GetPdfDetails = async () => {
       Authorization: accessToken
     })
     return response.json()
-  } catch {
-    console.log("fetch error")
+  } catch (e) {
+    console.log(e)
   }
 }
