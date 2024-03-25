@@ -12,10 +12,15 @@ import { GetPdfDetails } from './api/get-pdf-details'
 const Dashboard: React.FC = () => {
   const [data, setData] = useState<TableMetaData[]>()
   const [showPopup, setShowPopup] = useState(false);
+  const [email, setEmail] = useState<string>('#');
   const router = useRouter()
 
   useEffect(() => {
-    localStorage.getItem('user') === '' && router.push('/auth')
+    const userJSONString: string | null = localStorage.getItem('user');
+    userJSONString === '' && router.push('/auth')
+    const userJSON = JSON.parse(userJSONString ? userJSONString : '');
+    setEmail(userJSON.email || '');
+
     try {
       GetPdfDetails().then((results) => {
         setData(results.pdfs.map((result: any) => {
@@ -27,13 +32,13 @@ const Dashboard: React.FC = () => {
           )
         }))
       })
-
-    } catch {
-      console.log("failed calling")
+    } catch (e) {
+      console.log(e)
     }
   }, [])
+
   return (
-    <div className="">
+    <div>
       <ToastContainer
         theme='dark'
         closeButton={false}
@@ -46,7 +51,7 @@ const Dashboard: React.FC = () => {
         draggable
         pauseOnHover
       />
-      <NavBar popUp={showPopup} setPopUp={setShowPopup} />
+      <NavBar popUp={showPopup} setPopUp={setShowPopup} email={email} />
       <DataTable data={data ? data : []} />
       {showPopup &&
         <UploadPdf setShowPopup={setShowPopup} />}
