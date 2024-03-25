@@ -2,20 +2,36 @@
 
 import React, { useEffect, useState } from "react"
 import { useRouter } from 'next/navigation';
-import { DataTable } from "./components/Table";
+import { DataTable, TableMetaData, } from "./components/Table";
 import UploadPdf from "./components/UploadPdf";
 import NavBar from "./components/NavBar";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { GetPdfDetails } from './api/get-pdf-details'
 
-const EditorPage: React.FC = () => {
+const Dashboard: React.FC = () => {
+  const [data, setData] = useState<TableMetaData[]>()
   const [showPopup, setShowPopup] = useState(false);
   const router = useRouter()
 
   useEffect(() => {
     localStorage.getItem('user') === '' && router.push('/auth')
-  }, [])
+    try {
+      GetPdfDetails().then((results) => {
+        setData(results.pdfs.map((result: any) => {
+          return (
+            {
+              file_id: result.file_id,
+              filename: result.filename,
+            }
+          )
+        }))
+      })
 
+    } catch {
+      console.log("failed calling")
+    }
+  }, [])
   return (
     <div className="">
       <ToastContainer
@@ -30,12 +46,12 @@ const EditorPage: React.FC = () => {
         draggable
         pauseOnHover
       />
-      <NavBar popUp={showPopup} setPopUp={setShowPopup} user={{email:'abishek@gmail.com'}}/>
-      <DataTable />
+      <NavBar popUp={showPopup} setPopUp={setShowPopup} />
+      <DataTable data={data ? data : []} />
       {showPopup &&
         <UploadPdf setShowPopup={setShowPopup} />}
     </div>
   );
 };
 
-export default EditorPage;
+export default Dashboard;

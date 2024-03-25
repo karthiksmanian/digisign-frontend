@@ -39,42 +39,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-const data: TableMetaData[] = [
-  {
-    id: "m5gr84i9",
-    name: "Abishek",
-    uploadedDate: new Date("2024-12-12").toDateString(),
-  },
-  {
-    id: "3u1reuv4",
-
-    name: "Anirudh",
-    uploadedDate: new Date("2024-12-12").toDateString(),
-  },
-  {
-    id: "derv1ws0",
-
-    name: "Rakshith",
-    uploadedDate: new Date("2024-12-12").toDateString(),
-  },
-  {
-    id: "5kma53ae",
-
-    name: "Manian",
-    uploadedDate: new Date("2024-12-12").toDateString(),
-  },
-  {
-    id: "bhqecj4p",
-    name: "Radha Krishnan",
-    uploadedDate: new Date("2024-12-12").toDateString(),
-  },
-];
+import SendPdfId from '../api/send-pdf-id';
+import Loader from "./Loader";
 
 export type TableMetaData = {
-  id: string;
-  name: string;
-  uploadedDate: String;
+  file_id: string,
+  filename: string;
 };
 
 export const columns: ColumnDef<TableMetaData>[] = [
@@ -101,67 +71,34 @@ export const columns: ColumnDef<TableMetaData>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: "filename",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Name
+          File Name
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
+    cell: ({ row }) => <div className="lowercase">{row.getValue("filename")}</div>,
   },
   {
-    accessorKey: "uploadedDate",
-    header: () => <div className="text-right">Uploaded Date</div>,
+    accessorKey: 'signButton',
+    header: () => <div className="text-center">Sign</div>,
     cell: ({ row }) => {
       return (
-        <div className="text-right font-medium">
-          {row.getValue("uploadedDate")}
+        <div className="flex justify-center">
+          <Button className="p-4 bg-blue-500 text-white text-md rounded-lg" onClick={() => SendPdfId(row.original.file_id)}>Sign now</Button>
         </div>
-      );
-    },
-  },
-  {
-    id: "gmail",
-    cell: ({ row }) => { },
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
+      )
+    }
+  }
 ];
 
-export function DataTable() {
+export const DataTable = ({ data }: { data: TableMetaData[] }) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -193,10 +130,10 @@ export function DataTable() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter name..."
+          value={(table.getColumn("filename")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("filename")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -255,7 +192,7 @@ export function DataTable() {
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -270,7 +207,9 @@ export function DataTable() {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  <Loader />
+                  <div className="m-2"></div>
+                  Loading your pdfs
                 </TableCell>
               </TableRow>
             )}
