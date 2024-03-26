@@ -28,14 +28,10 @@ const NavBar: React.FC<Props> = ({ popUp, setPopUp, email }) => {
   return (
     <nav className="border-gray-200 bg-gray-900 ">
       <div className="w-full flex flex-wrap items-center justify-between mx-auto p-4">
-        <a
-          href="https://flowbite.com/"
-          className="flex items-center space-x-3 rtl:space-x-reverse"
-        >
+        <a className="flex items-center space-x-3 rtl:space-x-reverse cursor-pointer">
           <Image src={icon} className="h-8 w-8" alt="DigiSign" />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
-            DigiSign
-          </span>
+          <div className="self-center text-2xl font-semibold whitespace-nowrap text-gray-400">Digi
+            <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">Sign</span></div>
         </a>
         <button
           data-collapse-toggle="navbar-default"
