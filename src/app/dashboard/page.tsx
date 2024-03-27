@@ -2,12 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { DataTable, TableMetaData } from "./components/Table";
-import UploadPdf from "./components/UploadPdf";
-import NavBar from "./components/NavBar";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { GetPdfDetails } from "./api/get-pdf-details";
+import { DataTable, TableMetaData } from "./components/table";
+import UploadPdf from "./components/upload-pdf";
+import NavBar from "./components/nav-bar";
+import { getPdfDetails } from "./api/get-pdf-details";
+import Toaster from "@/components/ui/toaster";
 
 const Dashboard: React.FC = () => {
   const [data, setData] = useState<TableMetaData[]>();
@@ -22,36 +21,25 @@ const Dashboard: React.FC = () => {
     setEmail(userJSON.email || "#");
 
     try {
-      GetPdfDetails().then((results) => {
+      getPdfDetails().then((results) => {
         setData(
           results &&
-            results.pdfs.map((result: any) => {
-              return {
-                file_id: result.file_id,
-                filename: result.filename,
-              };
-            })
+          results.pdfs.map((result: any) => {
+            return {
+              file_id: result.file_id,
+              filename: result.filename,
+            };
+          })
         );
       });
     } catch (e) {
-      // console.log(e);
+      console.log(e);
     }
   }, []);
 
   return (
     <div>
-      <ToastContainer
-        theme="dark"
-        closeButton={false}
-        position="bottom-center"
-        autoClose={3000}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      <Toaster />
       <NavBar popUp={showPopup} setPopUp={setShowPopup} email={email} />
       <DataTable data={data ? data : []} />
       {showPopup && <UploadPdf setShowPopup={setShowPopup} />}

@@ -1,6 +1,6 @@
 import { FaRegEnvelope } from 'react-icons/fa';
 import { MdLockOutline } from 'react-icons/md';
-import { auth, provider } from '../../../context/firebase-config'
+import { auth, provider } from '@/context/firebase-config'
 import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -18,7 +18,9 @@ export default function Signup({ isLogin }: { isLogin: any }) {
             const data = await signInWithPopup(auth, provider);
             setCurrentUser(data.user);
             localStorage.setItem("user", JSON.stringify(data.user));
-            router.push('/dashboard');
+            toast.success('Signin successful', {
+                onClose: () => router.push('/dashboard'),
+            })
         } catch (error: any) {
             toast.error('' + error.message);
         }
@@ -31,7 +33,9 @@ export default function Signup({ isLogin }: { isLogin: any }) {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password)
                 const user = userCredential.user
                 localStorage.setItem('user', JSON.stringify(user))
-                router.push('/dashboard')
+                toast.success('Signup successful', {
+                    onClose: () => router.push('/dashboard'),
+                });
             } else {
                 throw new Error("Passwords do not match")
             }
