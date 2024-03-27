@@ -8,7 +8,7 @@ import {
 } from "@radix-ui/react-icons";
 import {
   ColumnDef,
-  ColumnFiltersState,
+  ColumnFiltersState, 
   SortingState,
   VisibilityState,
   flexRender,
@@ -100,11 +100,8 @@ export const columns: ColumnDef<TableMetaData>[] = [
 
 export const DataTable = ({ data }: { data: TableMetaData[] }) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
@@ -125,6 +122,10 @@ export const DataTable = ({ data }: { data: TableMetaData[] }) => {
       rowSelection,
     },
   });
+
+  const handleDelete = () => {
+    
+  }
 
   return (
     <div className="w-full">

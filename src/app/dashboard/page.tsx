@@ -15,27 +15,32 @@ const Dashboard: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    localStorage.getItem("user") == "" && router.push("/auth");
     const userJSONString: string | null = localStorage.getItem("user");
-    const userJSON = JSON.parse(userJSONString ? userJSONString : "");
+    if (!userJSONString) {
+      router.push("/auth");
+      return;
+    }
+    
+    const userJSON = JSON.parse(userJSONString);
     setEmail(userJSON.email || "#");
 
-    try {
-      getPdfDetails().then((results) => {
-        setData(
-          results &&
-          results.pdfs.map((result: any) => {
-            return {
-              file_id: result.file_id,
-              filename: result.filename,
-            };
-          })
-        );
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
+    const fetchPdfDetails = async () => {
+      try {
+        const results = await getPdfDetails();
+        if (results && results.pdfs) {
+          const formattedData = results.pdfs.map((result: any) => ({
+            file_id: result.file_id,
+            filename: result.filename,
+          }));
+          setData(formattedData);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchPdfDetails();
+  }, [router]);
 
   return (
     <div>
