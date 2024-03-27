@@ -1,6 +1,6 @@
 import { FaRegEnvelope } from 'react-icons/fa';
 import { MdLockOutline } from 'react-icons/md';
-import { auth, provider } from '../../../context/firebase-config'
+import { auth, provider } from '@/context/firebase-config'
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -18,7 +18,9 @@ export default function Login({ isLogin }: { isLogin: Function }) {
             const data = await signInWithPopup(auth, provider);
             setCurrentUser(data.user);
             localStorage.setItem("user", JSON.stringify(data.user));
-            router.push('/dashboard');
+            toast.success('Login successful', {
+                onClose: () => router.push("/dashboard"),
+            })
         } catch (error: any) {
             toast.error('' + error.message)
         }
@@ -30,7 +32,9 @@ export default function Login({ isLogin }: { isLogin: Function }) {
             const userCredential = await signInWithEmailAndPassword(auth, email, password)
             const user = userCredential.user
             localStorage.setItem('user', JSON.stringify(user))
-            router.push('/dashboard')
+            toast.success('Login successful', {
+                onClose: () => router.push('/dashboard')
+            })
         } catch (error: any) {
             toast.error('' + error.message)
         }

@@ -40,7 +40,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import SendPdfId from '../api/send-pdf-id';
-import Loader from "./Loader";
+import Loader from '@/components/ui/loader'
 
 export type TableMetaData = {
   file_id: string,

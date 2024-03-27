@@ -1,5 +1,5 @@
 import icon from "../../favicon.ico";
-import { auth } from "../../../context/firebase-config";
+import { auth } from "@/context/firebase-config";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -17,8 +17,9 @@ const NavBar: React.FC<Props> = ({ popUp, setPopUp, email }) => {
   const handleLogOut = async () => {
     await signOut(auth);
     localStorage.setItem("user", "");
-    toast.success("Logged out!");
-    router.push("/auth");
+    toast.success("Logged out!", {
+      onClose: () => router.push("/auth"),
+    });
   };
 
   const handleUploadPdf = () => {

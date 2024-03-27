@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { handleFileUpload } from '../api/upload-pdf'
 
 interface Props {
   setShowPopup: (show: boolean) => void;
@@ -14,42 +15,19 @@ const UploadPdf: React.FC<Props> = ({ setShowPopup }) => {
     }
   };
 
-  const handleUpload = async () => {
+  const handleUpload = async (file: File | null) => {
     if (!file) {
       toast.error('No file selected');
       return;
     }
-
-    const user = localStorage.getItem('user');
-    if (!user) {
-      toast.error('User information not found in localStorage');
-      return;
-    }
-
-    const userId = JSON.parse(user)?.uid;
-    if (!userId) {
-      toast.error('User ID not found in localStorage');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('pdf', file, file?.name);
-    formData.append('user_id', userId);
-
     try {
-      const response = await fetch('http://localhost:5000/pdfs/create', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
+      const response = await handleFileUpload(file)
+      if (response) {
         setShowPopup(false)
-          toast.success('File uploaded successfully');
-      } else {
-        toast.error('File upload failed');
+        toast.success("File uploaded!")
       }
-    } catch (error) {
-      toast.error('Error uploading file:' + error);
+    } catch (e) {
+      toast.error(JSON.stringify(e));
     }
   };
 
@@ -61,7 +39,7 @@ const UploadPdf: React.FC<Props> = ({ setShowPopup }) => {
           <button className="text-red-500 font-semibold" onClick={() => setShowPopup(false)}>Close</button>
         </div>
         <input type="file" onChange={handleFileChange} />
-        <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onClick={handleUpload}>Upload</button>
+        <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onClick={() => handleUpload(file)}>Upload</button>
       </div>
     </div>
   );
