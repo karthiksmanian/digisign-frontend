@@ -8,7 +8,7 @@ import {
 } from "@radix-ui/react-icons";
 import {
   ColumnDef,
-  ColumnFiltersState, 
+  ColumnFiltersState,
   SortingState,
   VisibilityState,
   flexRender,
@@ -39,7 +39,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import SendPdfId from '../api/send-pdf-id';
+import SignPdf from '../api/sign-pdf';
 import Loader from '@/components/ui/loader'
 
 export type TableMetaData = {
@@ -91,7 +91,7 @@ export const columns: ColumnDef<TableMetaData>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex justify-center">
-          <Button className="p-4 bg-blue-500 text-white text-md rounded-lg" onClick={() => SendPdfId(row.original.file_id)}>Sign now</Button>
+          <Button className="p-4 bg-blue-500 text-white text-md rounded-lg" onClick={() => SignPdf(row.original.file_id, row.original.filename)}>Sign now</Button>
         </div>
       )
     }
@@ -124,7 +124,7 @@ export const DataTable = ({ data }: { data: TableMetaData[] }) => {
   });
 
   const handleDelete = () => {
-    
+
   }
 
   return (
