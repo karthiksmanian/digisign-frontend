@@ -24,6 +24,6 @@ export const handleFileUpload = async (file: File): Promise<boolean> => {
     }
   } catch (error) {
     console.error(error);
-    throw error
+    throw error;
   }
 };

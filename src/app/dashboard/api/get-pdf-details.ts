@@ -16,10 +16,10 @@ export const getPdfDetails = async (): Promise<any> => {
     if (!response.ok) {
       throw new Error(`Failed to fetch PDF details. Status: ${response.status}`);
     }
-
+    
     return await response.json();
-  } catch (e) {
-    console.error(e);
-    throw e;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };
