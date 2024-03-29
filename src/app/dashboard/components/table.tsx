@@ -18,7 +18,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -39,8 +38,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import SignPdf from '../api/sign-pdf';
-import Loader from '@/components/ui/loader'
+import signPdf from '../api/sign-pdf';
+import { Loader } from '@/components/ui/loader';
+import { ShareModal } from './modal';
 
 export type TableMetaData = {
   file_id: string,
@@ -91,7 +91,23 @@ export const columns: ColumnDef<TableMetaData>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex justify-center">
-          <Button className="p-4 bg-blue-500 text-white text-md rounded-lg" onClick={() => SignPdf(row.original.file_id, row.original.filename)}>Sign now</Button>
+          <Button className="p-4 bg-blue-500 text-white text-md rounded-lg" onClick={() => signPdf(row.original.file_id, row.original.filename)}>Sign Pdf</Button>
+        </div>
+      )
+    }
+  },
+  {
+    accessorKey: 'shareButton',
+    header: () => <div className="text-center">Send for signing</div>,
+    cell: ({ row }) => {
+      const [showPopup, setShowPopup] = React.useState(false);
+      const sharePdf = () => {
+        setShowPopup(true);
+      }
+      return (
+        <div className="flex justify-center">
+          <Button className="p-4 bg-blue-500 text-white text-md rounded-lg" onClick={sharePdf}>Share Pdf</Button>
+          {showPopup && <ShareModal fileId={row.original.file_id} filename={row.original.filename} onClose={() => setShowPopup(false)} />}
         </div>
       )
     }
@@ -103,7 +119,6 @@ export const DataTable = ({ data }: { data: TableMetaData[] }) => {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-
   const table = useReactTable({
     data,
     columns,
@@ -122,10 +137,6 @@ export const DataTable = ({ data }: { data: TableMetaData[] }) => {
       rowSelection,
     },
   });
-
-  const handleDelete = () => {
-
-  }
 
   return (
     <div className="w-full">

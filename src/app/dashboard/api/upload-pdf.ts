@@ -1,4 +1,4 @@
-export const handleFileUpload = async (file: File): Promise<boolean> => {
+const handleFileUpload = async (file: File): Promise<boolean> => {
   try {
     const userJson = localStorage.getItem('user');
     if (!userJson) {
@@ -27,3 +27,5 @@ export const handleFileUpload = async (file: File): Promise<boolean> => {
     throw error;
   }
 };
+
+export default handleFileUpload;
