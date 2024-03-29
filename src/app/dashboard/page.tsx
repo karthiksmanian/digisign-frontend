@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DataTable, TableMetaData } from "./components/table";
-import { getPdfDetails } from "./api/get-pdf-details";
+import getPdfDetails from "./api/get-pdf-details";
 import UploadPdf from "./components/upload-pdf";
 import NavBar from "./components/nav-bar";
 import Toaster from "@/components/ui/toaster";
