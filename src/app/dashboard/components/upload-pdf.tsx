@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { handleFileUpload } from '../api/upload-pdf'
+import handleFileUpload from '../api/upload-pdf'
 
 interface Props {
   setShowPopup: (show: boolean) => void;

@@ -1,4 +1,4 @@
-const SignPdf = async (pdfId: string, pdfName: string): Promise<void> => {
+const signPdf = async (pdfId: string, pdfName: string): Promise<void> => {
   const userJSONString: string | null = localStorage.getItem("user");
   const userJSON = userJSONString && JSON.parse(userJSONString);
   const userEmail = userJSON.email;
@@ -6,4 +6,4 @@ const SignPdf = async (pdfId: string, pdfName: string): Promise<void> => {
   console.log(payload);
 };
 
-export default SignPdf;
+export default signPdf;

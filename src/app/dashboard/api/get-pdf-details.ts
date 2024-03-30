@@ -1,4 +1,4 @@
-export const getPdfDetails = async (): Promise<any> => {
+const getPdfDetails = async (): Promise<any> => {
   try {
     const userJson = localStorage.getItem('user');
     if (!userJson) {
@@ -49,3 +49,5 @@ export const getPdfDetailsToSign = async (): Promise<any> => {
     throw error;
   }
 };
+
+export default getPdfDetails;
