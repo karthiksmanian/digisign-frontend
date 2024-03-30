@@ -60,7 +60,7 @@ const Dashboard: React.FC = () => {
     <div>
       <Toaster />
       <NavBar popUp={showPopup} setPopUp={setShowPopup} email={email} />
-      <div style={{ display: "flex", flexGrow: 1 }}>
+      <div className="flex">
         <SideMenu onSelectOption={handleOptionSelect} />
         <DataTable data={data ? data : []} />
       </div>
