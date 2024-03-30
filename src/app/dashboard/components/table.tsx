@@ -139,7 +139,7 @@ export const DataTable = ({ data }: { data: TableMetaData[] }) => {
   });
 
   return (
-    <div className="w-full">
+    <div className="w-full p-5">
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter name..."
