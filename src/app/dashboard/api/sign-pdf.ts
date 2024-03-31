@@ -1,9 +1,22 @@
 const signPdf = async (pdfId: string, pdfName: string): Promise<void> => {
   const userJSONString: string | null = localStorage.getItem("user");
-  const userJSON = userJSONString && JSON.parse(userJSONString);
-  const userEmail = userJSON.email;
-  const payload = {'pdf_id': pdfId, 'pdf_name': pdfName, 'user_email': userEmail}
-  console.log(payload);
+  const user = userJSONString && JSON.parse(userJSONString);
+
+  // Extract access token from user data
+  const accessToken: string | undefined = user?.stsTokenManager?.accessToken;
+
+  // Construct URL with payload and access token as query parameters
+  const queryParams = new URLSearchParams({
+    pdf_id: pdfId,
+    pdf_name: pdfName,
+    user_email: user?.email,
+    accessToken: accessToken || "", // Include access token or an empty string if not available
+  });
+  console.log(queryParams);
+  const redirectUrl = `http://localhost:5000?${queryParams.toString()}`;
+
+  // Redirect user to the Svelte app with the constructed URL
+  window.location.href = redirectUrl;
 };
 
 export default signPdf;
