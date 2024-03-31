@@ -16,3 +16,18 @@
 //   from: email,
 //   to: 'abishek20030324@gmail.com',
 // }
+
+// CONTENTS TO BE IN share-model.tsx
+
+// const sendEmail = async () => {
+//   try {
+//     await transporter.sendMail({
+//       ...mailOptions,
+//       text: "Greetings! You have a document to sign...",
+//       html: "<h1>PSG Tech Digi Sign</h1><p>" + fileId + filename + "</p>"
+//     });
+//     toast.success('Invite sent successfully!')
+//   } catch(error: any) {
+//     toast.error(error);
+//   } 
+// }
