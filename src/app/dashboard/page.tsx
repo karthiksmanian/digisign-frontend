@@ -38,6 +38,7 @@ const Dashboard: React.FC = () => {
           const formattedData = results.pdfs.map((result: any) => ({
             file_id: result.file_id,
             filename: result.filename,
+            shared_to: result.shared_to
           }));
           setData(formattedData);
         }
