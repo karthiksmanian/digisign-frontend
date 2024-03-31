@@ -11,7 +11,8 @@ const handleFileUpload = async (file: File): Promise<boolean> => {
     const formData = new FormData();
     formData.append('pdf', file, file.name);
     formData.append('user_id', userId);
-
+    formData.append('user_email', user?.email);
+    
     const response = await fetch(`http://localhost:8001/pdfs/create`, {
       method: 'POST',
       body: formData,
