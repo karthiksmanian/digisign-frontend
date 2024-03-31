@@ -40,11 +40,12 @@ import {
 } from "@/components/ui/table";
 import signPdf from '../api/sign-pdf';
 import { Loader } from '@/components/ui/loader';
-import { ShareModal } from './modal';
+import { ShareModal } from './share-modal';
 
 export type TableMetaData = {
   file_id: string,
   filename: string;
+  shared_to: {}
 };
 
 export const columns: ColumnDef<TableMetaData>[] = [
@@ -107,7 +108,7 @@ export const columns: ColumnDef<TableMetaData>[] = [
       return (
         <div className="flex justify-center">
           <Button className="p-4 bg-blue-500 text-white text-md rounded-lg" onClick={sharePdf}>Share Pdf</Button>
-          {showPopup && <ShareModal fileId={row.original.file_id} filename={row.original.filename} onClose={() => setShowPopup(false)} />}
+          {showPopup && <ShareModal fileId={row.original.file_id} fileName={row.original.filename} sharedTo={row.original.shared_to} onClose={() => setShowPopup(false)} />}
         </div>
       )
     }

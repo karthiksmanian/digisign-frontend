@@ -25,7 +25,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ onSelectOption }) => {
           }`}
           onClick={() => handleSelectOption("Added Documents")}
         >
-          Added Documents
+          All Documents
         </li>
         <li
           className={`sidemenu-item rounded-lg cursor-pointer py-2 px-2 my-2 text-center transition duration-200 ease-in-out ${
@@ -35,7 +35,8 @@ const SideMenu: React.FC<SideMenuProps> = ({ onSelectOption }) => {
           }`}
           onClick={() => handleSelectOption("Documents to be signed")}
         >
-          Documents to be signed
+          <p>Documents</p>
+          <p>to sign</p>
         </li>
       </ul>
     </div>
