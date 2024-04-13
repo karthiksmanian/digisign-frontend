@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-// import { transporter, mailOptions } from '../api/nodemailer';
 import { toast } from "react-toastify";
 
 export const ShareModal: React.FC<{ fileId: string; fileName: string; sharedTo: { [key: string]: boolean }, onClose: () => void; }> = ({ fileId, fileName, sharedTo, onClose }) => {
@@ -8,19 +7,6 @@ export const ShareModal: React.FC<{ fileId: string; fileName: string; sharedTo: 
   const [email, setEmail] = useState('');
   const [sentForSigning, setSentForSigning] = useState<string[]>([]);
   const [signedUsers, setSignedUsers] = useState<string[]>([]);
-
-  // const sendEmail = async () => {
-  //   try {
-  //     await transporter.sendMail({
-  //       ...mailOptions,
-  //       text: "Greetings! You have a document to sign...",
-  //       html: "<h1>PSG Tech Digi Sign</h1><p>" + fileId + filename + "</p>"
-  //     });
-  //     toast.success('Invite sent successfully!')
-  //   } catch(error: any) {
-  //     toast.error(error);
-  //   } 
-  // }
 
   interface SharePDFRequest {
     emails: string[];
@@ -34,9 +20,18 @@ export const ShareModal: React.FC<{ fileId: string; fileName: string; sharedTo: 
         file_ids: [fileId]
       };
 
+      const userJson = localStorage.getItem('user');
+      if (!userJson) {
+        throw new Error('User data not found in localStorage');
+      }
+  
+      const user = JSON.parse(userJson);
+      const accessToken: string = user.stsTokenManager.accessToken;
+      
       const response = await fetch("http://localhost:8001/pdfs/share", {
         method: 'POST',
         headers: {
+          'Authorization': accessToken,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(requestBody)
@@ -45,9 +40,6 @@ export const ShareModal: React.FC<{ fileId: string; fileName: string; sharedTo: 
       if (!response.ok) {
         throw new Error('Failed to share PDF');
       }
-
-      const responseData = await response.json();
-      console.log(responseData);
     } catch (error) {
       console.error('Error sharing PDF:', error);
     }
@@ -106,11 +98,11 @@ export const ShareModal: React.FC<{ fileId: string; fileName: string; sharedTo: 
           />
           <Button className="bg-blue-600 hover:bg-blue-900" onClick={handleShare}>Share</Button>
         </div>
-        <div className="text-lg bg-gray-800 text-white rounded-md cursor-default py-2 text-center font-semibold mb-2 text-sm">Sent for signing</div>
+        <div className="text-lg bg-gray-800 text-white rounded-md cursor-default py-2 text-center font-semibold mb-2 text-sm">Yet to sign</div>
         <ul className="text-lg mb-2 text-sm">
           {
             sentForSigning.map((row, index) => {
-              return <li className={`text-center p-1 ${index % 2 === 0 ? 'bg-blue-200' : 'bg-gray-100'}`} key={index}>{row}</li>;
+              return <li className={'text-center p-1 m-1 bg-gray-200 cursor-pointer'} key={index}>{row}</li>;
             })
           }
         </ul>

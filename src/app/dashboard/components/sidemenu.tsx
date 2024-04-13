@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
 interface SideMenuProps {
+  options: string[];
   onSelectOption: (option: string) => void;
 }
 
-const SideMenu: React.FC<SideMenuProps> = ({ onSelectOption }) => {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+const SideMenu: React.FC<SideMenuProps> = ({ options, onSelectOption }) => {
+  const [selectedOption, setSelectedOption] = useState<string | null>(options[0] || null);
 
   const handleSelectOption = (option: string) => {
     onSelectOption(option);
@@ -17,27 +18,19 @@ const SideMenu: React.FC<SideMenuProps> = ({ onSelectOption }) => {
       <h2 className="my-2 font-bold text-lg text-gray-300 text-center">Menu</h2>
       <div className="border border-gray-20 w-full inline-block mb-2"></div>
       <ul className="list-none p-0 m-0">
-        <li
-          className={`sidemenu-item rounded-lg cursor-pointer py-2 px-2 my-2 text-center transition duration-200 ease-in-out ${
-            selectedOption === "Added Documents"
-              ? "bg-gray-300 text-gray-900"
-              : "hover:bg-gray-300 hover:text-gray-900 text-white"
-          }`}
-          onClick={() => handleSelectOption("Added Documents")}
-        >
-          All Documents
-        </li>
-        <li
-          className={`sidemenu-item rounded-lg cursor-pointer py-2 px-2 my-2 text-center transition duration-200 ease-in-out ${
-            selectedOption === "Documents to be signed"
-              ? "bg-gray-300 text-gray-900"
-              : "hover:bg-gray-300 hover:text-gray-900 text-white"
-          }`}
-          onClick={() => handleSelectOption("Documents to be signed")}
-        >
-          <p>Documents</p>
-          <p>to sign</p>
-        </li>
+        {options.map((option, index) => (
+          <li
+            key={option}
+            className={`sidemenu-item rounded-lg cursor-pointer py-2 px-2 my-2 text-center transition duration-200 ease-in-out ${
+              selectedOption === option
+                ? "bg-gray-100 text-gray-900 font-medium"
+                : "hover:bg-gray-300 hover:text-gray-900 hover:opacity-80 text-white"
+            }`}
+            onClick={() => handleSelectOption(option)}
+          >
+            {option}
+          </li>
+        ))}
       </ul>
     </div>
   );
