@@ -45,10 +45,10 @@ import { ShareModal } from './share-modal';
 export type TableMetaData = {
   file_id: string,
   filename: string;
-  shared_to: {}
+  shared_to: {};
 };
 
-export const columns: ColumnDef<TableMetaData>[] = [
+export const columns_all: ColumnDef<TableMetaData>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -115,11 +115,68 @@ export const columns: ColumnDef<TableMetaData>[] = [
   }
 ];
 
-export const DataTable = ({ data }: { data: TableMetaData[] }) => {
+export const columns_to_sign: ColumnDef<TableMetaData>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "filename",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          File Name
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("filename")}</div>,
+  },
+  {
+    accessorKey: 'signButton',
+    header: () => <div className="text-center">Sign</div>,
+    cell: ({ row }) => {
+      return (
+        <div className="flex justify-center">
+          <Button className="p-4 bg-blue-500 text-white text-md rounded-lg" onClick={() => signPdf(row.original.file_id, row.original.filename)}>Sign Pdf</Button>
+        </div>
+      )
+    }
+  },
+];
+
+export const DataTable = ({ data, selected_option }: { data: TableMetaData[], selected_option: string }) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  var columns: ColumnDef<TableMetaData>[] = [];
+  if (selected_option == "Added Documents") {
+    columns = columns_all;
+  } else if (selected_option === "Documents to be signed") {
+    columns = columns_to_sign;
+  }
   const table = useReactTable({
     data,
     columns,

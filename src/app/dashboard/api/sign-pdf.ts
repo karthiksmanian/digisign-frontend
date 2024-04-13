@@ -10,9 +10,8 @@ const signPdf = async (pdfId: string, pdfName: string): Promise<void> => {
     pdf_id: pdfId,
     pdf_name: pdfName,
     user_email: user?.email,
-    accessToken: accessToken || "", // Include access token or an empty string if not available
+    accessToken: accessToken || "",
   });
-  console.log(queryParams);
   const redirectUrl = `http://localhost:5000?${queryParams.toString()}`;
 
   // Redirect user to the Svelte app with the constructed URL

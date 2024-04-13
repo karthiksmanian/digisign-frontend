@@ -38,7 +38,7 @@ const Dashboard: React.FC = () => {
           const formattedData = results.pdfs.map((result: any) => ({
             file_id: result.file_id,
             filename: result.filename,
-            shared_to: result.shared_to
+            shared_to: result.shared_to,
           }));
           setData(formattedData);
         }
@@ -52,7 +52,6 @@ const Dashboard: React.FC = () => {
 
   const handleOptionSelect = async (option: string) => {
     if (option !== selectedOption) {
-      console.log(`Selected option changed: ${option}`);
       setSelectedOption(option);
     }
   };
@@ -62,8 +61,8 @@ const Dashboard: React.FC = () => {
       <Toaster />
       <NavBar popUp={showPopup} setPopUp={setShowPopup} email={email} />
       <div className="flex">
-        <SideMenu onSelectOption={handleOptionSelect} />
-        <DataTable data={data ? data : []} />
+        <SideMenu options={["Added Documents", "Documents to be signed"]} onSelectOption={handleOptionSelect} />
+        <DataTable data={data ? data : []} selected_option={selectedOption} />
       </div>
       {showPopup && <UploadPdf setShowPopup={setShowPopup} />}
     </div>
