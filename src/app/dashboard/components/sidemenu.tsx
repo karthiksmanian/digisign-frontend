@@ -14,7 +14,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ options, onSelectOption }) => {
   };
 
   return (
-    <div className="w-48 bg-gray-900 p-3 border-t border-right border-gray-400">
+    <div className={`w-48 bg-gray-900 p-3 border-t border-right border-gray-400 `}>
       <h2 className="my-2 font-bold text-lg text-gray-300 text-center">Menu</h2>
       <div className="border border-gray-20 w-full inline-block mb-2"></div>
       <ul className="list-none p-0 m-0">

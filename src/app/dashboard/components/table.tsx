@@ -41,11 +41,49 @@ import {
 import signPdf from '../api/sign-pdf';
 import { Loader } from '@/components/ui/loader';
 import { ShareModal } from './share-modal';
+import LoadingIcons from 'react-loading-icons'
+import { MdFileDownload } from 'react-icons/md';
 
 export type TableMetaData = {
   file_id: string,
   filename: string;
   shared_to: {};
+};
+
+
+const viewPDF = async (file_id: string, setLoading: any) => {
+
+  try {
+    const url = `http://localhost:8001/pdfs?file_id=${file_id}`;
+
+    const userJson = localStorage.getItem('user');
+
+    if (!userJson) {
+      throw new Error('User data not found in localStorage');
+    }
+
+    const user = JSON.parse(userJson);
+    const accessToken: string = user.stsTokenManager.accessToken;
+
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Authorization': accessToken },
+    };
+
+    const response = await fetch(url, requestOptions);
+
+    if (response.ok) {
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      window.open(blobUrl, '_blank');
+      setLoading(false)
+    } else {
+      throw new Error('Network response was not ok.');
+    }
+
+  } catch (error) {
+    console.error('Error:', error);
+  }
 };
 
 export const columns_all: ColumnDef<TableMetaData>[] = [
@@ -72,6 +110,21 @@ export const columns_all: ColumnDef<TableMetaData>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: 'view/downloadPDF',
+    header: () => <div className="text-center">Download or<br></br>view PDF</div>,
+    cell: ({ row }) => {
+      const [loading, setLoading] = React.useState(false)
+      return (
+        <div className="flex justify-center">
+          {loading ? <LoadingIcons.TailSpin stroke="#000000" height='24' width='24'/> : <MdFileDownload className="cursor-pointer" size={20} onClick={() => {
+            setLoading(true)
+            viewPDF(row.original.file_id, setLoading)
+          }} />}
+        </div>
+      )
+    }
+  },
+  {
     accessorKey: "filename",
     header: ({ column }) => {
       return (
@@ -92,7 +145,7 @@ export const columns_all: ColumnDef<TableMetaData>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex justify-center">
-          <Button className="p-4 bg-blue-500 text-white text-md rounded-lg" onClick={() => signPdf(row.original.file_id, row.original.filename)}>Sign Pdf</Button>
+          <Button className="p-4 bg-blue-500 text-white text-md rounded-lg" onClick={() => signPdf(row.original.file_id, row.original.filename)}>Sign PDF</Button>
         </div>
       )
     }
@@ -107,7 +160,7 @@ export const columns_all: ColumnDef<TableMetaData>[] = [
       }
       return (
         <div className="flex justify-center">
-          <Button className="p-4 bg-blue-500 text-white text-md rounded-lg" onClick={sharePdf}>Share Pdf</Button>
+          <Button className="p-4 bg-blue-500 text-white text-md rounded-lg" onClick={sharePdf}>Share PDF</Button>
           {showPopup && <ShareModal fileId={row.original.file_id} fileName={row.original.filename} sharedTo={row.original.shared_to} onClose={() => setShowPopup(false)} />}
         </div>
       )
@@ -137,6 +190,22 @@ export const columns_to_sign: ColumnDef<TableMetaData>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
+  },
+  {
+    accessorKey: 'view/downloadPDF',
+    header: () => <div className="text-center">Download or<br></br>view PDF</div>,
+    cell: ({ row }) => {
+      const [loading, setLoading] = React.useState(false)
+      return (
+        <div className="flex justify-center">
+          {loading ? <LoadingIcons.TailSpin stroke="#000000" height='24' width='24' /> : <MdFileDownload className="cursor-pointer" size={20} onClick={() => {
+            setLoading(true)
+            viewPDF(row.original.file_id, setLoading)
+          }} />}
+
+        </div>
+      )
+    }
   },
   {
     accessorKey: "filename",

@@ -15,6 +15,7 @@ const Dashboard: React.FC = () => {
   const [email, setEmail] = useState<string>("#");
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState("Added Documents");
+  const [height, setHeight] = useState<number>(500);
 
   useEffect(() => {
     const userJSONString: string | null = localStorage.getItem("user");
@@ -55,12 +56,16 @@ const Dashboard: React.FC = () => {
       setSelectedOption(option);
     }
   };
+  
+  useEffect(()=>{
+    setHeight(window.screen.height)
+  })
 
   return (
-    <div>
+    <div className={'h-full'}>
       <Toaster />
       <NavBar popUp={showPopup} setPopUp={setShowPopup} email={email} />
-      <div className="flex">
+      <div className='flex' style={{height:`${height*0.775}px`}}>
         <SideMenu options={["Added Documents", "Documents to be signed"]} onSelectOption={handleOptionSelect} />
         <DataTable data={data ? data : []} selected_option={selectedOption} />
       </div>
