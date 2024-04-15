@@ -10,7 +10,7 @@ export const deletePdfs = async (pdfIds: string[]): Promise<void> => {
 
     console.log(pdfIds);
 
-    const response = await fetch('http://localhost:8001/pdfs/delete', {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pdfs/delete`, {
       method: 'POST',
       body: JSON.stringify({
         file_ids: pdfIds

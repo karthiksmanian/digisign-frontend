@@ -52,10 +52,8 @@ export type TableMetaData = {
 };
 
 const viewPDF = async (file_id: string, setLoading: any) => {
-
   try {
-    const url = `http://localhost:8001/pdfs?file_id=${file_id}`;
-
+    const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/pdfs?file_id=${file_id}`;
     const userJson = localStorage.getItem('user');
 
     if (!userJson) {

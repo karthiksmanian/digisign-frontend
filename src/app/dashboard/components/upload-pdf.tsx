@@ -17,15 +17,15 @@ const UploadPdf: React.FC<Props> = ({ setShowPopup }) => {
 
   const handleUpload = async (file: File | null) => {
     if (!file) {
-      toast.error('No file selected');
+      toast.warning('No file selected');
       return;
     }
     if (file.type !== "application/pdf") {
-      toast.error('Please select a PDF file');
+      toast.warning('Please select a PDF file');
       return;
     }
     if (file.size > 50 * 1024 * 1024) {
-      toast.error('PDF file size should be less than or equal to 50MB');
+      toast.warning('PDF file size should be less than or equal to 50MB');
       return;
     }
     try {

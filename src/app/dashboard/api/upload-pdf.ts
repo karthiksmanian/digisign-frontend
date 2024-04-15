@@ -15,7 +15,7 @@ const handleFileUpload = async (file: File): Promise<boolean> => {
     formData.append('user_id', userId);
     formData.append('user_email', user?.email);
     
-    const response = await fetch(`http://localhost:8001/pdfs/create`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pdfs/create`, {
       method: 'POST',
       headers: { 'Authorization': accessToken },
       body: formData,

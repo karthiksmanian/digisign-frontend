@@ -8,7 +8,7 @@ export const getPdfDetails = async (): Promise<any> => {
     const user = JSON.parse(userJson);
     const userId: string = user.uid;
     const accessToken: string = user.stsTokenManager.accessToken;
-    const response = await fetch(`http://localhost:8001/pdfs/user?user_id=${userId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pdfs/user?user_id=${userId}`, {
       headers: { 'Authorization': accessToken }
     });
 
@@ -32,7 +32,7 @@ export const getPdfDetailsToSign = async (): Promise<any> => {
     const user = JSON.parse(userJson);
     const userEmail: string = user.email;
     const accessToken: string = user.stsTokenManager.accessToken;
-    const response = await fetch(`http://localhost:8001/pdfs/to_sign?user_email=${userEmail}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pdfs/to_sign?user_email=${userEmail}`, {
       headers: { 'Authorization': accessToken }
     });
 
