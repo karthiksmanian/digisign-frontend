@@ -29,7 +29,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -38,18 +37,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import signPdf from '../api/sign-pdf';
 import { Loader } from '@/components/ui/loader';
 import { ShareModal } from './share-modal';
-import LoadingIcons from 'react-loading-icons'
 import { MdFileDownload } from 'react-icons/md';
+import { deletePdfs } from "../api/delete-pdfs";
+import { toast } from "react-toastify";
+import signPdf from '../api/sign-pdf';
+import LoadingIcons from 'react-loading-icons'
 
 export type TableMetaData = {
   file_id: string,
   filename: string;
   shared_to: {};
 };
-
 
 const viewPDF = async (file_id: string, setLoading: any) => {
 
@@ -116,7 +116,7 @@ export const columns_all: ColumnDef<TableMetaData>[] = [
       const [loading, setLoading] = React.useState(false)
       return (
         <div className="flex justify-center">
-          {loading ? <LoadingIcons.TailSpin stroke="#000000" height='24' width='24'/> : <MdFileDownload className="cursor-pointer" size={20} onClick={() => {
+          {loading ? <LoadingIcons.TailSpin stroke="#000000" height='24' width='24' /> : <MdFileDownload className="cursor-pointer" size={20} onClick={() => {
             setLoading(true)
             viewPDF(row.original.file_id, setLoading)
           }} />}
@@ -170,28 +170,6 @@ export const columns_all: ColumnDef<TableMetaData>[] = [
 
 export const columns_to_sign: ColumnDef<TableMetaData>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: 'view/downloadPDF',
     header: () => <div className="text-center">Download or<br></br>view PDF</div>,
     cell: ({ row }) => {
@@ -239,13 +217,18 @@ export const DataTable = ({ data, selected_option }: { data: TableMetaData[], se
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+
+  type RowSelectionState = Record<number, boolean>;
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+
   var columns: ColumnDef<TableMetaData>[] = [];
+
   if (selected_option == "Added Documents") {
     columns = columns_all;
   } else if (selected_option === "Documents to be signed") {
     columns = columns_to_sign;
   }
+
   const table = useReactTable({
     data,
     columns,
@@ -265,17 +248,33 @@ export const DataTable = ({ data, selected_option }: { data: TableMetaData[], se
     },
   });
 
+  const handleDeletePdf = async () => {
+    const selectedRowIds: number[] = Object.keys(rowSelection).map(Number);
+    const selectedPdfIds: string[] = [];
+    if (selectedRowIds.length > 0) {
+      for (const id of selectedRowIds) {
+        selectedPdfIds.push(data[id].file_id);
+      }
+      await deletePdfs(selectedPdfIds);
+      toast.success('Deleted please reload!');
+    } else {
+      toast.warning('No rows selected!');
+    }
+  }
+
   return (
     <div className="w-full p-5">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter name..."
+      <div className="flex py-4">
+        <input
+          placeholder="Search pdf..."
           value={(table.getColumn("filename")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("filename")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="border bg-gray-100 rounded-md px-5 outline-none text-gray-800 text-sm flex-1 max-w-sm"
         />
+        {selected_option == "Added Documents" ?
+          <Button className="ml-4" onClick={handleDeletePdf}> Delete selected pdfs</Button> : <div></div>}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
