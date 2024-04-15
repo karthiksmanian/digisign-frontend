@@ -20,6 +20,14 @@ const UploadPdf: React.FC<Props> = ({ setShowPopup }) => {
       toast.error('No file selected');
       return;
     }
+    if (file.type !== "application/pdf") {
+      toast.error('Please select a PDF file');
+      return;
+    }
+    if (file.size > 50 * 1024 * 1024) {
+      toast.error('PDF file size should be less than or equal to 50MB');
+      return;
+    }
     try {
       const response = await handleFileUpload(file)
       if (response) {
@@ -36,10 +44,11 @@ const UploadPdf: React.FC<Props> = ({ setShowPopup }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">Upload PDF</h2>
-          <button className="text-red-500 font-semibold" onClick={() => setShowPopup(false)}>Close</button>
+          <button className="text-white font-bold px-3 py-1 rounded bg-red-900 hover:bg-red-700" title="Close" onClick={() => setShowPopup(false)}>X</button>
         </div>
-        <input type="file" onChange={handleFileChange} />
-        <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onClick={() => handleUpload(file)}>Upload</button>
+        <div className='text-sm text-red-500 font-semibold'>*PDF file size should be less than or equal to 50MB</div>
+        <input type="file" onChange={handleFileChange} title='Choose file' />
+        <button className="mt-4 bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-900" title='Upload' onClick={() => handleUpload(file)}>Upload</button>
       </div>
     </div>
   );
