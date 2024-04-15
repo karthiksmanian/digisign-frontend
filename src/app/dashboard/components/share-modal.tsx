@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
+import { FaTrash } from "react-icons/fa";
+import { removeShare } from '../api/remove-share'
 
 export const ShareModal: React.FC<{ fileId: string; fileName: string; sharedTo: { [key: string]: boolean }, onClose: () => void; }> = ({ fileId, fileName, sharedTo, onClose }) => {
 
@@ -24,10 +26,10 @@ export const ShareModal: React.FC<{ fileId: string; fileName: string; sharedTo: 
       if (!userJson) {
         throw new Error('User data not found in localStorage');
       }
-  
+
       const user = JSON.parse(userJson);
       const accessToken: string = user.stsTokenManager.accessToken;
-      
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pdfs/share`, {
         method: 'POST',
         headers: {
@@ -49,7 +51,7 @@ export const ShareModal: React.FC<{ fileId: string; fileName: string; sharedTo: 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
-  
+
   const handleShare = async () => {
     try {
       if (!isValidEmail(email)) {
@@ -58,9 +60,24 @@ export const ShareModal: React.FC<{ fileId: string; fileName: string; sharedTo: 
       }
       await updateSharedTo(email, fileId);
       setSentForSigning(prevArray => [...prevArray, email]);
-      toast.success('Pdf shared to ' + email)
+      toast.success('Pdf shared to ' + email);
+      setEmail('');
     } catch (error: any) {
       toast.error(error as string)
+    }
+  }
+
+  const handleRemoveShare = async (index: number) => {
+    try {
+      var emailToRemove: string = sentForSigning[index];
+      const response: boolean = await removeShare(fileId, emailToRemove);
+      if (response) {
+        var new_emails = sentForSigning.filter((email) => email !== emailToRemove)
+        setSentForSigning(new_emails)
+        toast.success('Share access removed');
+      }
+    } catch (e: any) {
+      toast.error(e as string);
     }
   }
 
@@ -93,8 +110,9 @@ export const ShareModal: React.FC<{ fileId: string; fileName: string; sharedTo: 
             type="email"
             required
             onChange={(e) => setEmail(e.target.value)}
+            value={email}
             placeholder="Enter email to share..."
-            className="bg-gray-100 p-2 rounded-md outline-blue-200 text-gray-800 text-sm flex-1"
+            className="bg-gray-100 p-2 border rounded-md outline-blue-200 text-gray-800 text-sm flex-1"
           />
           <Button className="bg-blue-600 hover:bg-blue-900" onClick={handleShare}>Share</Button>
         </div>
@@ -102,7 +120,19 @@ export const ShareModal: React.FC<{ fileId: string; fileName: string; sharedTo: 
         <ul className="text-lg mb-2 text-sm">
           {
             sentForSigning.map((row, index) => {
-              return <li className={'text-center p-1 m-1 bg-gray-200 cursor-pointer'} key={index}>{row}</li>;
+              return (
+                (index != 0) ?
+                  <div className="flex w-full items-center justify-between">
+                    <li className='text-center w-full py-1 px-4 rounded border m-1 bg-gray-200' key={index}>{row}</li>
+                    <div className="mr-1">
+                      <FaTrash title='remove access' className="cursor-pointer mx-3 text-red-700 hover:text-red-500" onClick={() => handleRemoveShare(index)} />
+                    </div>
+                  </div>
+                  :
+                  <div className="flex w-full items-center justify-between">
+                    <li className='text-center w-full py-1 px-4 rounded border m-1 bg-gray-300' key={index}>{row} (you)</li>
+                  </div>
+              );
             })
           }
         </ul>
@@ -110,7 +140,7 @@ export const ShareModal: React.FC<{ fileId: string; fileName: string; sharedTo: 
         <ul className="text-lg mb-2 text-sm">
           {
             signedUsers.map((row, index) => {
-              return <li className={`text-center p-1 ${index % 2 === 0 ? 'bg-blue-200' : 'bg-gray-100'}`} key={index}>{row}</li>;
+              return <li className='text-center w-full py-1 px-4 rounded border m-1 bg-gray-200' key={index}>{row}</li>;
             })
           }
         </ul>

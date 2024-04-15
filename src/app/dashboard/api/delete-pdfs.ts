@@ -8,8 +8,6 @@ export const deletePdfs = async (pdfIds: string[]): Promise<void> => {
     const user = JSON.parse(userJson);
     const accessToken = user.stsTokenManager.accessToken;
 
-    console.log(pdfIds);
-
     const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pdfs/delete`, {
       method: 'POST',
       body: JSON.stringify({
