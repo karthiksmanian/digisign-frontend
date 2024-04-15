@@ -12,7 +12,7 @@ const signPdf = async (pdfId: string, pdfName: string): Promise<void> => {
     user_email: user?.email,
     accessToken: accessToken || "",
   });
-  const redirectUrl = `http://localhost:5000?${queryParams.toString()}`;
+  const redirectUrl = `${process.env.NEXT_PUBLIC_PDF_EDIT_URL}?${queryParams.toString()}`;
 
   // Redirect user to the Svelte app with the constructed URL
   window.location.href = redirectUrl;

@@ -28,7 +28,7 @@ export const ShareModal: React.FC<{ fileId: string; fileName: string; sharedTo: 
       const user = JSON.parse(userJson);
       const accessToken: string = user.stsTokenManager.accessToken;
       
-      const response = await fetch("http://localhost:8001/pdfs/share", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/pdfs/share`, {
         method: 'POST',
         headers: {
           'Authorization': accessToken,
@@ -53,7 +53,7 @@ export const ShareModal: React.FC<{ fileId: string; fileName: string; sharedTo: 
   const handleShare = async () => {
     try {
       if (!isValidEmail(email)) {
-        toast.error('Invalid Email!');
+        toast.warning('Enter valid email!');
         return
       }
       await updateSharedTo(email, fileId);
