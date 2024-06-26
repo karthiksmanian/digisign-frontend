@@ -23,7 +23,7 @@ PRs are welcome, reach out to the developers.
 
 - [Abishek](https://github.com/20PW01-Abishek) - Email: 20pw01@psgtech.ac.in
 
-You can also check out our backend repository [here](https://github.com/20PW01-Abishek/digisign-backendy).
+You can also check out our backend repository [here](https://github.com/20PW01-Abishek/digisign-backend).
 
 ## Support
 
