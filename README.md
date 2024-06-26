@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Digisign
 
-## Getting Started
+The point of making this app is to avoid redundancy in dowloading the PDFs, instead we maintain a single shared instance which can be downloaded at a later stage once the requested people have signed the doc.
 
-First, run the development server:
+## Workflow
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Sign Up**: Create an account/SSO in with Google on our platform.
+2. **Upload a PDF**: Upload the PDF document you want to sign collaboratively.
+3. **Invite Collaborators**: Invite others to view and sign the document.
+4. **Sign the Document**: Apply your signature and see the real-time updates as others sign.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Demo Video
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Just watch the video, We dont have the app productioned :(
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+[[Watch the Demo]](https://www.loom.com/share/f12b4e20125146fdb5fa07c99dd588ec)
 
-## Learn More
+## Contributing
 
-To learn more about Next.js, take a look at the following resources:
+PRs are welcome, reach out to the developers.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Karthik](https://github.com/karthiksmanian) - Email: 20pw16@psgtech.ac.in
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- [Abishek](https://github.com/20PW01-Abishek) - Email: 20pw01@psgtech.ac.in
 
-## Deploy on Vercel
+You can also check out our backend repository [here](https://github.com/20PW01-Abishek/digisign-backendy).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Support
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Reach out to the devs mostly, although an active email during the development but not so looked up now yet, provided here is psgtech.digisign@gmail.com
